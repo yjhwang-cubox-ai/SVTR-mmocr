@@ -1,4 +1,5 @@
 from tps_preprocessor import *
+from svtr_encoder import *
 import cv2
 import torch
 import numpy as np
@@ -10,17 +11,15 @@ img_tensor = torch.tensor(img_array)
 img_tensor = img_tensor.unsqueeze(0)
 img_tensor = img_tensor.permute(0, 3, 1, 2).to(torch.float32)
 
-img_tensor = torch.randn(1,3,64,256)
-print(img_tensor.shape)
+img_tensor = torch.randn(2,3,64,256)
+print(f'Data Shape: {img_tensor.shape}')
 
 preprocessor = STN(in_channels=3)
+encoder = SVTREncode()
 output = preprocessor(img_tensor)
 
-print(output.shape)
+print(f'STN output: {output.shape}')
 
-# from datasets import TNGODataset
+output = encoder(output)
 
-# dataset = TNGODataset('/data/CUBOX_VN_Recog_v7/CUBOX_VN_annotation_cleaned.json')
-# print(dataset[300])
-
-# print(len(dataset))
+print(f'SVTREncode output: {output.shape}')
