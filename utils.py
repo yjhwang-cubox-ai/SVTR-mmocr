@@ -1,4 +1,4 @@
-def list_from_file(self, filename, encoding='utf-8'):
+def list_from_file(filename, encoding='utf-8'):
     """Load a text file and parse the content as a list of strings. The
     trailing "\\r" and "\\n" of each line will be removed.
 
