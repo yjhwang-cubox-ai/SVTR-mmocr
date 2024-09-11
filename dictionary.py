@@ -3,7 +3,6 @@ import torch.nn as nn
 from utils import list_from_file
 from typing import List, Sequence
 
-
 class Dictionary(nn.Module):
     def __init__(self,
                  dict_file: str,
@@ -87,7 +86,7 @@ class Dictionary(nn.Module):
         self.start_idx = None
         self.end_idx = None
         if self.with_start and self.with_end and self.same_start_end:
-            self._dict.append
+            self._dict.append(self.start_end_token)
             self.start_idx = len(self._dict) - 1
             self.end_idx = self.start_idx
         else:
