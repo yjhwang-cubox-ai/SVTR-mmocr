@@ -69,8 +69,9 @@ class Dictionary(nn.Module):
         idx = list()
         for s in string:
             char_idx = self.char2idx(s)
-            if char_idx is None:
+            if char_idx is not None:
                 idx.append(char_idx)
+        return idx
     
     def idx2str(self, index: Sequence[int]) -> str:
         assert isinstance(index, (list, tuple))
