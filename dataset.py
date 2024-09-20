@@ -5,7 +5,6 @@ import numpy as np
 import random
 from typing import Dict, List, Tuple
 from torch.utils.data import Dataset
-from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
 from dictionary import Dictionary
 from config import Config
@@ -30,19 +29,19 @@ class SvtrDataset(Dataset):
         data = self._get_data(index)
         augmented_data = self._img_augmentation(data, self.mode)
         augmented_img = augmented_data['img']
-        cv2.imwrite('augmented_img.jpg', augmented_img)
         img = self.transform(augmented_img)
         text = data['text']
         target = self.dictionary.str2idx(text)
 
-        return img, text, target
+        out = {'image': img, 'text': text}
+
+        return out
     
     def _get_data(self, index):
         raise NotImplementedError
     
     def _img_augmentation(self, data, mode):
         if mode == 'train':
-            cv2.imwrite('1-before_aug.jpg', data['img'])
             return self._img_augmentation_train(data)
         elif mode == 'test':
             return self._img_augmentation_test(data)
@@ -629,20 +628,3 @@ class Resize:
         results['keep_ratio'] = False
         
         return results
-
-'''===================================================================================================
-Code Test
-==================================================================================================='''
-
-if __name__ == '__main__':
-    dataset_json = ['/data/TNGoDataset/1_TNGo1/annotation.json',
-                    '/data/TNGoDataset/3_TNGo3/annotation.json']
-    dataset = TNGODataset(dataset_json, mode='train')
-    dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=4)
-
-    for batch in dataloader:
-        print(batch)
-
-
-    output = dataset._print()
-    print(output)

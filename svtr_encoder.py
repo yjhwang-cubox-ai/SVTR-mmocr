@@ -316,7 +316,7 @@ class MerigingBlock(nn.Module):
         
         return out
 
-class SVTREncode(nn.Module):
+class SVTREncoder(nn.Module):
     def __init__(self,
                  img_size: Tuple[int, int] = [32, 100],
                  in_channels: int = 3,
