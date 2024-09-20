@@ -1,6 +1,5 @@
-import torch
 import torch.nn as nn
-from typing import Dict, List, Optional, Sequence, Union
+from typing import Dict, List, Optional, Union
 
 class SVTRDecoder(nn.Module):
     def __init__(self,

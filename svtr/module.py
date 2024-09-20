@@ -3,14 +3,14 @@ import torch
 import torch.utils.data as data
 from torch.utils.data import DataLoader, random_split
 from lightning.pytorch.demos.boring_classes import RandomDataset
-from dataset import TNGODataset
-from config import Config
+from svtr.dataset.dataset import TNGODataset
+from svtr.utils.config import Config
 
-from tps_preprocessor import STN
-from svtr_encoder import SVTREncoder
-from svtr_decoder import SVTRDecoder
-from loss import CTCModuleLoss
-from dictionary import Dictionary
+from svtr.model.tps_preprocessor import STN
+from svtr.model.svtr_encoder import SVTREncoder
+from svtr.model.svtr_decoder import SVTRDecoder
+from svtr.model.loss import CTCModuleLoss
+from svtr.utils.dictionary import Dictionary
 
 class SVTRModule(L.LightningModule):
     def __init__(self):

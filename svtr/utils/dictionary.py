@@ -1,6 +1,5 @@
-import torch
 import torch.nn as nn
-from utils import list_from_file
+from svtr.utils.utils import list_from_file
 from typing import List, Sequence
 
 class Dictionary(nn.Module):

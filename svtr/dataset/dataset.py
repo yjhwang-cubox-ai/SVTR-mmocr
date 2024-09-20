@@ -6,8 +6,8 @@ import random
 from typing import Dict, List, Tuple
 from torch.utils.data import Dataset
 from torchvision import transforms
-from dictionary import Dictionary
-from config import Config
+from svtr.utils.dictionary import Dictionary
+from svtr.utils.config import Config
 
 class SvtrDataset(Dataset):
     def __init__(self):
@@ -31,7 +31,6 @@ class SvtrDataset(Dataset):
         augmented_img = augmented_data['img']
         img = self.transform(augmented_img)
         text = data['text']
-        target = self.dictionary.str2idx(text)
 
         out = {'image': img, 'text': text}
 
