@@ -12,7 +12,7 @@ from svtr.model.svtr_decoder import SVTRDecoder
 from svtr.model.loss import CTCModuleLoss
 from svtr.utils.dictionary import Dictionary
 
-class SVTRModule(L.LightningModule):
+class SvtrModelModule(L.LightningModule):
     def __init__(self):
         super().__init__()
         self.config = Config()
@@ -44,11 +44,11 @@ class SVTRModule(L.LightningModule):
 class SvtrDataModule(L.LightningDataModule):
     def __init__(self):
         super().__init__()
-        self.batch_size: int = 256
+        self.config = Config()
+        self.batch_size: int = self.config['training']['batch_size']
         self.train_dataset = None
         self.val_dataset = None
-        self.collate_fn = None
-        self.config = Config()
+        self.collate_fn = None        
 
     def setup(self, stage=None):
         # json_list = self.config.dataset_config['train_json']

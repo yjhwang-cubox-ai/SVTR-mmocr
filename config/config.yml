@@ -1,10 +1,14 @@
+wandb:
+  key: '53f960c86b81377b89feb5d30c90ddc6c3810d3a'
+
 global:
   max_text_length: 30
   character_dict_path: 'dict/vietnam_dict.txt'
 
 training:
   epochs: 30
-  batch_size: 64
+  batch_size: 256
+  num_gpus: 1
 
 dataset:
   train_json: ['/data/TNGoDataset/1_TNGo1/annotation.json',
