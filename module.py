@@ -16,33 +16,34 @@ class SvtrDataModule(L.LightningDataModule):
         self.config = Config()
 
     def setup(self, stage=None):
-        json_list = self.config.dataset_config['train_json']
-        train_datasets = TNGoDataset(json_list, mode='train')
-        train_set_size = int(len(train_dataset) * 0.9)
-        val_set_size = len(train_dataset) - train_set_size
+        # json_list = self.config.dataset_config['train_json']
+        train_datasets = self._tngo_dataset(self.config.dataset_config['train_json'], mode='train')
+        # TNGoDataset(json_list, mode='train')
+        train_set_size = int(len(train_datasets) * 0.9)
+        val_set_size = len(train_datasets) - train_set_size
 
         # split the dataset
         seed = torch.Generator().manual_seed(42)
-        train_dataset, val_dataset = random_split(train_datasets, [train_set_size, val_set_size], generator=seed)
-
-
-        print(json_list)
-
-
-
-        # make assignments here (val/train/test split)
-        # called on every process in DDP
-        pass
+        train_datasets, val_datasets = random_split(train_datasets, [train_set_size, val_set_size], generator=seed)
+        train_datasets.mode = 'train'
+        val_datasets.mode = 'test'
+        test_datasets = self._tngo_dataset(self.config.dataset_config['test_json'], mode='test')
+        self.train_dataset = train_datasets
+        self.val_dataset = val_datasets
+        self.test_dataset = test_datasets
+        
     def train_dataloader(self):
-        return data.DataLoader(self.train_dataset)
+        return data.DataLoader(self.train_dataset, self.batch_size, collate_fn=self.collate_fn)
 
     def val_dataloader(self):
-        return data.DataLoader(self.val_dataset)
+        return data.DataLoader(self.val_dataset, self.batch_size, collate_fn=self.collate_fn)
 
     def test_dataloader(self):
-        return data.DataLoader(self.test_dataset)
+        return data.DataLoader(self.test_dataset, self.batch_size, collate_fn=self.collate_fn)
+    
+    def _tngo_dataset(self, data_json, mode) -> TNGoDataset:
+        return TNGoDataset(data_json = data_json, mode=mode)
 
 if __name__ == '__main__':
     dm = SvtrDataModule()
-    dm.setup()
     print('done')
