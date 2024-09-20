@@ -5,10 +5,42 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python 디버거: 현재 파일",
+            "name": "main",
             "type": "debugpy",
             "request": "launch",
             "program": "main.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "test.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "dataset",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "dataset.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "module",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "module.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "train",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "train.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }

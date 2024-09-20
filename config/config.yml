@@ -1,0 +1,34 @@
+global:
+  max_text_length: 30
+  character_dict_path: 'dict/vietnam_dict.txt'
+
+training:
+  epochs: 30
+  batch_size: 64
+
+dataset:
+  train_json: ['/data/TNGoDataset/1_TNGo1/annotation.json',
+              '/data/TNGoDataset/3_TNGo3/annotation.json']
+  test_json: ['/data/CUBOX_VN_Recog_v7/CUBOX_VN_annotation_cleaned.json']
+  transforms_train:
+    - TextRecogGeneralAug:
+        prob: 0.5
+    - CropHeight:
+        prob: 0.5
+    - GaussianBlur:
+        condition: 'min(results["img_shape"])>10'
+        prob: 0.5
+    - ColorJitter:
+        prob: 0.5
+    - ImageContentJitter:
+        prob: 0.5
+    - AdditiveGaussianNoise:
+        prob: 0.5
+        scale: 0.1**0.5
+    - ReversePixels:
+        prob: 0.5
+    - Resize:
+        scale: [256, 64]
+  transforms_test:
+    - Resize:
+        scale: [256, 64]
