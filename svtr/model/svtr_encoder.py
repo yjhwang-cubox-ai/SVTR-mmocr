@@ -6,8 +6,8 @@ import torch.nn as nn
 from torch.nn.init import trunc_normal_
 import torch.nn.functional as F
 
-from conv_module import ConvModule
-from bricks import DropPath
+from svtr.model.conv_module import ConvModule
+from svtr.model.bricks import DropPath
 
 class OverlapPatchEmbed(nn.Module):
     """Image to the progressive overlapping Patch Embedding.

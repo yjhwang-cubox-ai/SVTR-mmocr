@@ -17,4 +17,6 @@ class Config:
     def __init__(self, config_path='config/config.yml'):
         self.config = load_yaml(config_path)
         self.global_config = self.config['global']
+        self.wandb_config = self.config['wandb']
+        self.training_config = self.config['training']
         self.dataset_config = self.config['dataset']

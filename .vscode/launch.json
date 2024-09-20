@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "main",
+            "name": "temp",
             "type": "debugpy",
             "request": "launch",
-            "program": "main.py",
+            "program": "temp.py",
             "console": "integratedTerminal",
             "justMyCode": false
         },

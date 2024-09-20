@@ -11,16 +11,23 @@ from svtr.model.svtr_encoder import SVTREncoder
 from svtr.model.svtr_decoder import SVTRDecoder
 from svtr.model.loss import CTCModuleLoss
 from svtr.utils.dictionary import Dictionary
+from svtr.model.svtr import SVTR
 
 class SvtrModelModule(L.LightningModule):
     def __init__(self):
         super().__init__()
-        self.config = Config()
-        self.dictionary = Dictionary(dict_file=self.config.global_config['character_dict_path'], with_padding=True, with_unknown=True)
-        self.preprocessor = STN(in_channels=3)
-        self.encoder = SVTREncoder()
-        self.decoder = SVTRDecoder(in_channels=192, dictionary=None)
-        self.criterion = CTCModuleLoss(dictionary=self.dictionary)
+        self.model = SVTR()
+        # self.config = Config()
+        # self.dictionary = Dictionary(dict_file=self.config.global_config['character_dict_path'], with_padding=True, with_unknown=True)
+        # self.preprocessor = STN(in_channels=3)
+        # self.encoder = SVTREncoder()
+        # self.decoder = SVTRDecoder(in_channels=192, dictionary=self.dictionary)
+        # self.criterion = CTCModuleLoss(dictionary=self.dictionary)
+    
+    def configure_optimizers(self):
+        optimizer = torch.optim.AdamW(self.model.parameters(), lr=1e-4, weight_decay=1e-5)
+        lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, self.trainer.max_epochs - 2)
+        return [optimizer], [lr_scheduler]
 
     def training_step(self, batch, batch_idx):
         image, text = batch['image'], batch['text']
@@ -45,7 +52,7 @@ class SvtrDataModule(L.LightningDataModule):
     def __init__(self):
         super().__init__()
         self.config = Config()
-        self.batch_size: int = self.config['training']['batch_size']
+        self.batch_size: int = self.config.training_config['batch_size']
         self.train_dataset = None
         self.val_dataset = None
         self.collate_fn = None        
