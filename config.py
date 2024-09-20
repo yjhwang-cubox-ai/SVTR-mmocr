@@ -15,6 +15,6 @@ def load_yaml(file_path):
 
 class Config:
     def __init__(self, config_path='config/config.yml'):
-        config = load_yaml(config_path)
-        self.global_config = config['global']
-        self.dataset_config = config['dataset']
+        self.config = load_yaml(config_path)
+        self.global_config = self.config['global']
+        self.dataset_config = self.config['dataset']
