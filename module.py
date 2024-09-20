@@ -3,8 +3,43 @@ import torch
 import torch.utils.data as data
 from torch.utils.data import DataLoader, random_split
 from lightning.pytorch.demos.boring_classes import RandomDataset
-from dataset import TNGoDataset
+from dataset import TNGODataset
 from config import Config
+
+from tps_preprocessor import STN
+from svtr_encoder import SVTREncoder
+from svtr_decoder import SVTRDecoder
+from loss import CTCModuleLoss
+from dictionary import Dictionary
+
+class SVTRModule(L.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.config = Config()
+        self.dictionary = Dictionary(dict_file=self.config.global_config['character_dict_path'], with_padding=True, with_unknown=True)
+        self.preprocessor = STN(in_channels=3)
+        self.encoder = SVTREncoder()
+        self.decoder = SVTRDecoder(in_channels=192, dictionary=None)
+        self.criterion = CTCModuleLoss(dictionary=self.dictionary)
+
+    def training_step(self, batch, batch_idx):
+        image, text = batch['image'], batch['text']
+        x = self.preprocessor(image)
+        x = self.encoder(x)
+        x = self.decoder.forward_train(x)
+        loss = self.criterion(x, text)
+        self.log('train_loss', loss)
+        return loss
+    def validation_step(self, batch, batch_idx):
+        image, text = batch['image'], batch['text']
+        x = self.preprocessor(image)
+        x = self.encoder(x)
+        x = self.decoder.forward_test(x)
+        loss = self.criterion(x, text)
+        self.log('val_loss', loss)
+        return loss
+    def test_step(self, batch, batch_idx):
+        pass
 
 class SvtrDataModule(L.LightningDataModule):
     def __init__(self):
@@ -41,8 +76,8 @@ class SvtrDataModule(L.LightningDataModule):
     def test_dataloader(self):
         return data.DataLoader(self.test_dataset, self.batch_size, collate_fn=self.collate_fn)
     
-    def _tngo_dataset(self, data_json, mode) -> TNGoDataset:
-        return TNGoDataset(data_json = data_json, mode=mode)
+    def _tngo_dataset(self, data_json, mode) -> TNGODataset:
+        return TNGODataset(data_json = data_json, mode=mode)
 
 if __name__ == '__main__':
     dm = SvtrDataModule()
