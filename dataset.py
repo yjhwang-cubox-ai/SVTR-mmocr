@@ -37,7 +37,7 @@ class SvtrDataset(Dataset):
 
         return img, text, target
     
-    def _get_img_text(self, index):
+    def _get_data(self, index):
         raise NotImplementedError
     
     def _img_augmentation(self, data, mode):
@@ -48,17 +48,16 @@ class SvtrDataset(Dataset):
             return self._img_augmentation_test(data)
     
     def _img_augmentation_train(self, data):
-        opt = self.config.dataset_config.get('transforms_train2',[])
+        opt = self.config.dataset_config.get('transforms_train',[])
         for transform in opt:
             data = self.call_transforms(transform, data)
-        img = data['img']
-        cv2.imwrite('augmented_img.jpg', img)
-        print('a')
-        
         return data
 
-    def _img_augmentation_test(self, img):
-        pass
+    def _img_augmentation_test(self, data):
+        opt = self.config.dataset_config.get('transforms_test',[])
+        for transform in opt:
+            data = self.call_transforms(transform, data)
+        return data
 
     def call_transforms(self, transform, data):
         if 'TextRecogGeneralAug' in transform:
@@ -638,7 +637,7 @@ Code Test
 if __name__ == '__main__':
     dataset_json = ['/data/TNGoDataset/1_TNGo1/annotation.json',
                     '/data/TNGoDataset/3_TNGo3/annotation.json']
-    dataset = TNGoDataset(dataset_json, mode='train')
+    dataset = TNGODataset(dataset_json, mode='train')
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=4)
 
     for batch in dataloader:
